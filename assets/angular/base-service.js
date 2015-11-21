@@ -23,10 +23,10 @@ function getBaseServiceInstance($q,$http,ngDialog){
             params : param
         })
             .success(function (data, status, headers, config) {
-                if(fn!=undefined&&data.success){
+                if(fn!=undefined&&status==200){
                     fn(data);
                 }
-                if(!data.success){
+                if(status!=200){
                     if(typeof fnFalse == 'function'){
                         fnFalse(data);
                     }
@@ -58,7 +58,7 @@ function getBaseServiceInstance($q,$http,ngDialog){
                     if(fn!=undefined&&data.success){
                         fn(data);
                     }
-                    if(!data.success){
+                    if(status!=200){
                         if(typeof fnFalse == 'function'){
                             fnFalse(data);
                         }
