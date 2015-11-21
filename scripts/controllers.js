@@ -20,7 +20,7 @@ seachControllers.controller('listController', ['$scope', 'baseService',
         };
 
 
-        var search_url="http://localhost/es/_search"
+        var search_url="/es/_search"
         $scope.search=function(target_page){
             var search_param = {
                 size:0,
@@ -29,16 +29,16 @@ seachControllers.controller('listController', ['$scope', 'baseService',
 
             search_param['q']=$scope.keyword;
             search_param['size']=$scope.pageInfo.size;
-            if(target_page){
-                search_param['from']=(target_page*$scope.pageInfo.size)+1;//计算从第几条获取
-                $scope.pageInfo.curr_page_num = target_page;
-            }
+            search_param['from']=((target_page-1)*$scope.pageInfo.size)+1;//计算从第几条获取
+            $scope.pageInfo.curr_page_num = target_page;
+
 
             baseService.get(search_url,search_param,function(res){
                 $scope.search_rs.total=res.hits.total;
                 $scope.search_rs.took=res.took;
                 $scope.search_rs.data=res.hits.hits;
-                $scope.pageInfo.page_counts = (int)(res.hits.total % $scope.pageInfo.size==0 ? res.hits.total / $scope.pageInfo.size: res.hits.total / $scope.pageInfo.size + 1);
+                var page_counts=res.hits.total % $scope.pageInfo.size==0 ? res.hits.total / $scope.pageInfo.size: res.hits.total / $scope.pageInfo.size + 1;
+                $scope.pageInfo.page_counts = Math.ceil(page_counts);
 
                 refreshPage();
             });
